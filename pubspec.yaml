@@ -1,0 +1,33 @@
+name: situraja_village_app
+description: Explore Situraja village application
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  google_fonts: ^6.1.0 # Gunakan versi terbaru yang tersedia
+  another_flushbar: ^1.12.3
+  flutter_svg: ^2.0.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Alatsi
+      fonts:
+        - asset: assets/fonts/Alatsi-Regular.ttf
+
+  assets:
+    - assets/images/
