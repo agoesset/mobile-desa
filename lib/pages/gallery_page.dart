@@ -1,118 +1,62 @@
 import 'package:flutter/material.dart';
-import '../widgets/gallery_item.dart';
+import '../theme/app_theme.dart'; // Pastikan path ini benar
 
 class GalleryDesaScreen extends StatelessWidget {
   const GalleryDesaScreen({Key? key}) : super(key: key);
 
+  final String appBarTitle = 'Galeri Desa'; // Judul AppBar
+
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isTablet = screenWidth <= 991 && screenWidth > 640;
-    final isMobile = screenWidth <= 640;
-
-    double getMaxWidth() {
-      return screenWidth; // Gunakan lebar layar penuh
-    }
-
-    double getPaddingBottom() {
-      if (isMobile) return 150;
-      if (isTablet) return 200;
-      return 252;
-    }
-
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: SizedBox.expand(
-          child: Center(
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: getMaxWidth(),
-              ),
-              // Hapus margin horizontal
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(50),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    offset: const Offset(0, 4),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(
-                      isMobile ? 20 : (isTablet ? 30 : 40.25),
-                      isMobile ? 50 : (isTablet ? 60 : 75.878),
-                      isMobile ? 20 : (isTablet ? 30 : 40.25),
-                      isMobile ? 10 : (isTablet ? 15 : 17.122),
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0F2A1D),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          offset: const Offset(0, 4),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Color(0xFFE8EFDC),
-                            size: 24,
-                          ),
-                          onPressed: () => Navigator.of(context).pop(),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                        const SizedBox(width: 7),
-                        const Text(
-                          'Galery Desa',
-                          style: TextStyle(
-                            color: Color(0xFFE8EFDC),
-                            fontFamily: 'Alatsi',
-                            fontSize: 25,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: getPaddingBottom()),
-                        child: Column(
-                          children: [
-                            GalleryItem(
-                              width: screenWidth - 32, // Sesuaikan lebar GalleryItem
-                              height: isMobile ? 115 : (isTablet ? 130 : 145),
-                            ),
-                            GalleryItem(
-                              width: screenWidth - 32, // Sesuaikan lebar GalleryItem
-                              height: isMobile ? 115 : (isTablet ? 130 : 145),
-                            ),
-                            GalleryItem(
-                              width: screenWidth - 32, // Sesuaikan lebar GalleryItem
-                              height: isMobile ? 115 : (isTablet ? 130 : 145),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+      appBar: AppBar(
+        backgroundColor: AppTheme.primaryColor, // Menggunakan warna primer dari tema
+        title: Text(
+          appBarTitle,
+          style: AppTheme.alatsiStyle(
+            fontSize: 18,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        iconTheme: const IconThemeData(color: Colors.white), // Warna ikon AppBar
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20), // Membuat ujung bawah melengkung
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0), // Tambahkan sedikit padding horizontal
+        child: Column(
+          children: [
+            const SizedBox(height: 22.0),
+            _buildGalleryImage(context, 'https://cdn.builder.io/api/v1/image/assets/TEMP/a102e29c1ad9f70d25c686a415b0436fe33760d1?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3'),
+            const SizedBox(height: 10.0),
+            _buildGalleryImage(context, 'https://cdn.builder.io/api/v1/image/assets/TEMP/323d89e0629c67b367c59cb8621848c301df5836?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3'),
+            const SizedBox(height: 10.0),
+            _buildGalleryImage(context, 'https://cdn.builder.io/api/v1/image/assets/TEMP/86f0e065ef9f8fb1ca6ea8cc741cc491bb7cde85?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3'),
+            const SizedBox(height: 10.0),
+            _buildGalleryImage(context, 'https://cdn.builder.io/api/v1/image/assets/TEMP/207d038e75269fe6e5ea33501ae4572006597c8f?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3'),
+            const SizedBox(height: 10.0),
+            _buildGalleryImage(context, 'https://cdn.builder.io/api/v1/image/assets/TEMP/75d07dfdd0df66b0dad12ed68596f83fff3c3dac?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3'),
+            const SizedBox(height: 10.0),
+            _buildGalleryImage(context, 'https://cdn.builder.io/api/v1/image/assets/TEMP/a9cb335db190bdf0236b0c7982155af597d0d09c?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3'),
+            const SizedBox(height: 89.0), // Bottom padding
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGalleryImage(BuildContext context, String imageUrl) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: MediaQuery.of(context).size.width, // Lebar sesuai dengan lebar layar
+        height: 200.0, // Atur tinggi sesuai keinginan Anda
       ),
     );
   }

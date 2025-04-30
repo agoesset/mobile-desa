@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/produk_card.dart';
+import '../theme/app_theme.dart'; // Import tema aplikasi Anda
 
-class ProductCard extends StatelessWidget {
+class ProdukCard extends StatelessWidget { // Ganti nama kelas menjadi ProdukCard
   final Product product;
 
-  const ProductCard({
+  const ProdukCard({
     Key? key,
     required this.product,
   }) : super(key: key);
@@ -12,48 +13,75 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      width: 163,
+      height: 235, // Tambah tinggi untuk menampung tombol
       decoration: BoxDecoration(
-        color: const Color(0xFFE8EFDC),
+        color: AppTheme.secondaryColor,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.25),
-            offset: Offset(0, 4),
-            blurRadius: 4,
-          ),
-        ],
+        boxShadow: [AppTheme.defaultShadow],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.network(
-              product.imageUrl,
-              width: double.infinity,
-              height: 132,
-              fit: BoxFit.contain,
-            ),
-          ),
-          const SizedBox(height: 7),
-          Text(
-            product.title,
-            style: const TextStyle(
-              fontFamily: 'Alatsi',
-              fontSize: 13,
-              color: Color(0xFF0F2A1D),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'Rp. ${product.price.toStringAsFixed(0)}',
-              style: const TextStyle(
-                fontFamily: 'Alatsi',
-                fontSize: 13,
-                color: Color(0xFF0F2A1D),
+          Positioned(
+            left: 16,
+            top: 16,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                product.imageUrl,
+                width: 132,
+                height: 138,
+                fit: BoxFit.cover,
               ),
+            ),
+          ),
+          Positioned(
+            left: 16,
+            bottom: 16,
+            right: 16,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.title,
+                  style: AppTheme.alatsiStyle(
+                    fontSize: 13,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Rp ${product.price.toStringAsFixed(0)}',
+                      style: AppTheme.alatsiStyle(
+                        fontSize: 13,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Tambahkan logika tombol pesan di sini
+                        print('Pesan produk: ${product.title}');
+                        // Anda bisa menambahkan fungsi untuk membuka chat, dll.
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryColor,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        textStyle: const TextStyle(fontSize: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Pesan',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],

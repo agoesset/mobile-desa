@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import '../models/product_card.dart';
+import '../widgets/home_produk_card.dart'; // Import HomeProductCard yang baru dibuat
 import '../models/news_card.dart';
-import '../pages/news_page.dart'; // Import halaman NewsPage
-import '../pages/information_page.dart'; // Import halaman InformationScreen
+import '../pages/news_page.dart';
+import '../pages/information_page.dart';
 import '../pages/product_listing_page.dart';
 import '../pages/gallery_page.dart';
 
@@ -61,7 +61,6 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          // Tambahkan IconButton untuk info di sini
                           IconButton(
                             icon: const Icon(Icons.info_outline, color: Colors.white, size: 24),
                             onPressed: () {
@@ -195,7 +194,7 @@ class HomeScreen extends StatelessWidget {
                         itemCount: 5,
                         separatorBuilder: (context, index) => const SizedBox(width: 16),
                         itemBuilder: (context, index) {
-                          return const ProductCard(
+                          return const HomeProductCard( // Menggunakan HomeProductCard di sini
                             imageUrl: 'https://cdn.builder.io/api/v1/image/assets/TEMP/908b157d0f57de7abeb3fadafd49ffd590a50b27?placeholderIfAbsent=true',
                             title: 'Sabun herbal daun sirih.',
                             price: 'Rp. 20.000',
@@ -278,8 +277,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-
-             bottomNavigationBar: Container(
+      bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: const BoxDecoration(
           color: AppTheme.primaryColor,
@@ -306,7 +304,7 @@ class HomeScreen extends StatelessWidget {
               child: const Icon(Icons.info_outline, color: Colors.white, size: 28),
             ),
             const Icon(Icons.home_outlined, color: Colors.white, size: 28),
-            GestureDetector( // Bungkus ikon shopping bag dengan GestureDetector
+            GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
@@ -315,7 +313,7 @@ class HomeScreen extends StatelessWidget {
               },
               child: const Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 28),
             ),
-            GestureDetector( // Bungkus ikon image dengan GestureDetector
+            GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
@@ -326,7 +324,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-    )
+      ),
     );
   }
 }

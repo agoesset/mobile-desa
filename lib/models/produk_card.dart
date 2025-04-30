@@ -1,9 +1,9 @@
 class Product {
   final String title;
-  final double price;
+  final int price;
   final String imageUrl;
 
-  const Product({
+  Product({
     required this.title,
     required this.price,
     required this.imageUrl,

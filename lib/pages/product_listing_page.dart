@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/produk_card.dart';
-import '../models/produk_card.dart';
+import '../widgets/produk_card.dart'; // Pastikan path ini benar
+import '../models/produk_card.dart'; // Pastikan path ini benar
+import '../pages/detail_product_page.dart'; // Import ProductDetailPage (pastikan pathnya benar)
+import '../theme/app_theme.dart'; // Import tema aplikasi Anda
 
 class ProductListingScreen extends StatelessWidget {
   ProductListingScreen({Key? key}) : super(key: key);
@@ -52,11 +54,10 @@ class ProductListingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0F2A1D), // Warna header
-        title: const Text(
+        backgroundColor: AppTheme.primaryColor, // Menggunakan warna primer dari tema
+        title: Text(
           'Produk Desa',
-          style: TextStyle(
-            fontFamily: 'Alatsi',
+          style: AppTheme.alatsiStyle(
             fontSize: 25,
             color: Colors.white,
           ),
@@ -67,7 +68,7 @@ class ProductListingScreen extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white), // Ikon back putih
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -85,7 +86,18 @@ class ProductListingScreen extends StatelessWidget {
             ),
             itemCount: products.length,
             itemBuilder: (context, index) {
-              return ProductCard(product: products[index]);
+              final product = products[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailPage(product: product),
+                    ),
+                  );
+                },
+                child: ProdukCard(product: product), // Menggunakan ProdukCard yang baru
+              );
             },
           ),
         ),

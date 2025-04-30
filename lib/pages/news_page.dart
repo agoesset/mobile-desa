@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/styles.dart';
-import '../models/news_card.dart'; // Pastikan import NewsCard Anda benar
+import '../models/news_card.dart';
+import '../pages/news_detail_page.dart'; // Import NewsDetailPage
 
 class NewsPage extends StatelessWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -35,14 +36,14 @@ class NewsPage extends StatelessWidget {
         backgroundColor: AppStyles.headerBackground,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20), // Atur radius sesuai keinginan Anda
+            bottom: Radius.circular(20),
           ),
         ),
         title: Row(
           children: [
-            GestureDetector( // Bungkus Icon dengan GestureDetector
+            GestureDetector(
               onTap: () {
-                Navigator.pop(context); // Navigasi kembali ke halaman sebelumnya
+                Navigator.pop(context);
               },
               child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
@@ -65,11 +66,26 @@ class NewsPage extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final newsItem = dummyNewsData[index];
-          return NewsCard(
-            imageUrl: newsItem['imageUrl'] ?? '',
-            title: newsItem['title'] ?? '',
-            description: newsItem['description'] ?? '',
-            date: newsItem['date'] ?? '',
+          return GestureDetector( // Bungkus NewsCard dengan GestureDetector
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewsDetailPage(
+                    imageUrl: newsItem['imageUrl'] ?? '',
+                    title: newsItem['title'] ?? '',
+                    description: newsItem['description'] ?? '',
+                    date: newsItem['date'] ?? '',
+                  ),
+                ),
+              );
+            },
+            child: NewsCard(
+              imageUrl: newsItem['imageUrl'] ?? '',
+              title: newsItem['title'] ?? '',
+              description: newsItem['description'] ?? '',
+              date: newsItem['date'] ?? '',
+            ),
           );
         },
       ),

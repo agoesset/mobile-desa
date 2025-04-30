@@ -19,7 +19,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 163,
-      height: 219,
+      height: 235, // Tambah tinggi untuk menampung tombol
       decoration: BoxDecoration(
         color: AppTheme.secondaryColor,
         borderRadius: BorderRadius.circular(10),
@@ -43,6 +43,7 @@ class ProductCard extends StatelessWidget {
           Positioned(
             left: 16,
             bottom: 16,
+            right: 16, // Tambahkan right agar tombol tidak terlalu mepet
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -53,12 +54,36 @@ class ProductCard extends StatelessWidget {
                     color: AppTheme.primaryColor,
                   ),
                 ),
-                Text(
-                  price,
-                  style: AppTheme.alatsiStyle(
-                    fontSize: 13,
-                    color: AppTheme.primaryColor,
-                  ),
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      price,
+                      style: AppTheme.alatsiStyle(
+                        fontSize: 13,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Tambahkan logika tombol pesan di sini
+                        print('Pesan produk: $title');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryColor,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        textStyle: const TextStyle(fontSize: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Pesan',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
