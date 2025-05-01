@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart'; // Pastikan path ini benar
+import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
 
 class GalleryDesaScreen extends StatelessWidget {
   const GalleryDesaScreen({Key? key}) : super(key: key);
@@ -46,6 +47,7 @@ class GalleryDesaScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 

@@ -38,7 +38,17 @@ class OfficialCard extends StatelessWidget {
             child: Image.network(
               imageUrl,
               width: double.infinity,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover, // Changed to BoxFit.cover to maintain aspect ratio
+              height: 120, // Added a fixed height for better layout
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 120,
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(Icons.broken_image, color: Colors.grey),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 10),
@@ -50,6 +60,8 @@ class OfficialCard extends StatelessWidget {
               fontFamily: 'Alatsi',
             ),
             textAlign: TextAlign.center,
+            maxLines: 2, // Added maxLines to handle longer names
+            overflow: TextOverflow.ellipsis, // Added overflow for very long names
           ),
           Text(
             position,
@@ -59,6 +71,8 @@ class OfficialCard extends StatelessWidget {
               fontFamily: 'Alatsi',
             ),
             textAlign: TextAlign.center,
+            maxLines: 2, // Added maxLines for longer positions
+            overflow: TextOverflow.ellipsis, // Added overflow for very long positions
           ),
         ],
       ),

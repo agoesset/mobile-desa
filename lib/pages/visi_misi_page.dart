@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 import '../theme/text_styles.dart';
+import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
 
 class VisiMisiDesaScreen extends StatelessWidget {
   const VisiMisiDesaScreen({Key? key}) : super(key: key);
@@ -85,6 +86,7 @@ class VisiMisiDesaScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }

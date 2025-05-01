@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/styles.dart';
 import '../models/news_card.dart';
 import '../pages/news_detail_page.dart'; // Import NewsDetailPage
+import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
 
 class NewsPage extends StatelessWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -89,6 +90,7 @@ class NewsPage extends StatelessWidget {
           );
         },
       ),
+      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }

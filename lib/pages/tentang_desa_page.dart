@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 import '../theme/text_styles.dart';
+import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
 
 class TentangDesaScreen extends StatelessWidget {
   const TentangDesaScreen({Key? key}) : super(key: key);
@@ -68,6 +69,7 @@ class TentangDesaScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }

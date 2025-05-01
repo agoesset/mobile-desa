@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
 
 class KebijakanPrivasiScreen extends StatelessWidget {
   const KebijakanPrivasiScreen({Key? key}) : super(key: key);
@@ -45,6 +46,7 @@ class KebijakanPrivasiScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }

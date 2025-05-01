@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../widgets/produk_card.dart'; // Pastikan path ini benar
-import '../models/produk_card.dart'; // Pastikan path ini benar
-import '../pages/detail_product_page.dart'; // Import ProductDetailPage (pastikan pathnya benar)
-import '../theme/app_theme.dart'; // Import tema aplikasi Anda
+import '../widgets/produk_card.dart';
+import '../models/produk_card.dart';
+import '../pages/detail_product_page.dart';
+import '../theme/app_theme.dart';
+import '../widgets/bottom_navbar.dart';
 
 class ProductListingScreen extends StatelessWidget {
   ProductListingScreen({Key? key}) : super(key: key);
@@ -54,7 +55,7 @@ class ProductListingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor, // Menggunakan warna primer dari tema
+        backgroundColor: AppTheme.primaryColor,
         title: Text(
           'Produk Desa',
           style: AppTheme.alatsiStyle(
@@ -77,31 +78,49 @@ class ProductListingScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 33,
-              mainAxisSpacing: 43,
-              childAspectRatio: 0.65,
-            ),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailPage(product: product),
-                    ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              int crossAxisCount = 2;
+              if (constraints.maxWidth > 600) {
+                crossAxisCount = 3;
+              } else if (constraints.maxWidth > 900) {
+                crossAxisCount = 4;
+              }
+              double aspectRatio = 0.65;
+              if (crossAxisCount == 3) {
+                aspectRatio = 0.75;
+              } else if (crossAxisCount == 4) {
+                aspectRatio = 0.85;
+              }
+
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 33,
+                  mainAxisSpacing: 43,
+                  childAspectRatio: aspectRatio,
+                ),
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailPage(product: product),
+                        ),
+                      );
+                    },
+                    child: ProdukCard(product: product),
                   );
                 },
-                child: ProdukCard(product: product), // Menggunakan ProdukCard yang baru
               );
             },
           ),
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

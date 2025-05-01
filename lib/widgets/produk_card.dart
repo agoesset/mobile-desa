@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/produk_card.dart';
-import '../theme/app_theme.dart'; // Import tema aplikasi Anda
+import '../theme/app_theme.dart';
 
-class ProdukCard extends StatelessWidget { // Ganti nama kelas menjadi ProdukCard
+class ProdukCard extends StatelessWidget {
   final Product product;
 
   const ProdukCard({
@@ -12,80 +12,91 @@ class ProdukCard extends StatelessWidget { // Ganti nama kelas menjadi ProdukCar
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 163,
-      height: 235, // Tambah tinggi untuk menampung tombol
-      decoration: BoxDecoration(
-        color: AppTheme.secondaryColor,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [AppTheme.defaultShadow],
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 16,
-            top: 16,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                product.imageUrl,
-                width: 132,
-                height: 138,
-                fit: BoxFit.cover,
-              ),
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = constraints.maxWidth;
+
+        return Container(
+          width: cardWidth,
+          decoration: BoxDecoration(
+            color: AppTheme.secondaryColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [AppTheme.defaultShadow],
           ),
-          Positioned(
-            left: 16,
-            bottom: 16,
-            right: 16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.title,
-                  style: AppTheme.alatsiStyle(
-                    fontSize: 13,
-                    color: AppTheme.primaryColor,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min, // Tambahkan ini agar Column tidak mengambil ruang tak terbatas
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(10), bottom: Radius.zero),
+                child: Image.network(
+                  product.imageUrl,
+                  width: double.infinity,
+                  height: cardWidth * 0.6, // Sesuaikan rasio tinggi gambar awal
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return SizedBox(
+                      height: cardWidth * 0.6,
+                      width: double.infinity,
+                      child: const Center(
+                        child: Icon(Icons.broken_image_outlined),
+                      ),
+                    );
+                  },
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Rp ${product.price.toStringAsFixed(0)}',
+                      product.title,
                       style: AppTheme.alatsiStyle(
-                        fontSize: 13,
+                        fontSize: 12,
                         color: AppTheme.primaryColor,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Tambahkan logika tombol pesan di sini
-                        print('Pesan produk: ${product.title}');
-                        // Anda bisa menambahkan fungsi untuk membuka chat, dll.
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        textStyle: const TextStyle(fontSize: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Rp ${product.price.toStringAsFixed(0)}',
+                          style: AppTheme.alatsiStyle(
+                            fontSize: 12,
+                            color: AppTheme.primaryColor,
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        'Pesan',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                        ElevatedButton(
+                          onPressed: () {
+                            print('Pesan produk: ${product.title}');
+                            // Tambahkan logika tombol pesan di sini
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                            textStyle: const TextStyle(fontSize: 9),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'Pesan',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
 
 class NewsDetailPage extends StatelessWidget {
   final String imageUrl;
@@ -113,6 +114,7 @@ class NewsDetailPage extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }

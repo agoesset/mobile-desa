@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/produk_card.dart';
 import '../theme/colors.dart';
 import '../theme/produk_text_style.dart';
+import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
@@ -101,6 +102,7 @@ class ProductDetailPage extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }
