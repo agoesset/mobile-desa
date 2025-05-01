@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
-import 'input_page.dart'; // Tambahkan ini di atas!
+import 'home_page.dart'; // Pastikan path ke HomeScreen benar
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Navigasi ke HomeScreen setelah 2 detik
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()), // Ganti dengan halaman home Anda
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,107 +51,47 @@ class WelcomeScreen extends StatelessWidget {
           ),
           // Content
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Spacer(flex: 2), // Lebih banyak ruang di atas
-
-                  // Welcome Text Section
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        'Welcome to',
-                        style: TextStyle(
-                          fontSize: 40,
-                          color: Colors.white,
-                          fontFamily: 'Alatsi',
-                          fontWeight: FontWeight.w400,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Explore Situraja',
-                        style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.white,
-                          fontFamily: 'Alatsi',
-                          fontWeight: FontWeight.w400,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        'village',
-                        style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.white,
-                          fontFamily: 'Alatsi',
-                          fontWeight: FontWeight.w400,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-
-                  const Spacer(flex: 2), // Tambahan ruang di tengah agar tombol makin ke bawah
-
-                  // Sign Up Button
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const InputDesign()),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      side: const BorderSide(width: 3, color: Colors.white),
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text(
-                      'Sign up',
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    // Welcome Text Section
+                    Text(
+                      'Welcome to',
                       style: TextStyle(
-                        fontSize: 25,
-                        fontFamily: 'Alatsi',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Sign In Button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const InputDesign()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF097F57),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    child: const Text(
-                      'Sign in',
-                      style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 40,
                         color: Colors.white,
                         fontFamily: 'Alatsi',
                         fontWeight: FontWeight.w400,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-
-                  const Spacer(flex: 2), // Ruang kecil di bawah tombol
-                ],
+                    SizedBox(height: 10),
+                    Text(
+                      'Explore Situraja',
+                      style: TextStyle(
+                        fontSize: 35,
+                        color: Colors.white,
+                        fontFamily: 'Alatsi',
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'village',
+                      style: TextStyle(
+                        fontSize: 35,
+                        color: Colors.white,
+                        fontFamily: 'Alatsi',
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
