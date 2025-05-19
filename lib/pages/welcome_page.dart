@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart'; // Pastikan path ke HomeScreen benar
+import 'package:cached_network_image/cached_network_image.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -12,12 +13,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigasi ke HomeScreen setelah 2 detik
+    _navigateToHome();
+  }
+
+  void _navigateToHome() {
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()), // Ganti dengan halaman home Anda
-      );
+      if (mounted) {  // Check if the widget is still mounted
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        ).catchError((error) {
+          // Handle navigation error
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Terjadi kesalahan saat memuat halaman utama'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        });
+      }
     });
   }
 
@@ -26,11 +40,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image
+          // Background Image with CachedNetworkImage
           Positioned.fill(
-            child: Image.network(
-              'https://cdn.builder.io/api/v1/image/assets/TEMP/4d2bc82b7bc21c01fdcc89338138b9c1d67decb3?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3',
+            child: CachedNetworkImage(
+              imageUrl: 'https://cdn.builder.io/api/v1/image/assets/TEMP/4d2bc82b7bc21c01fdcc89338138b9c1d67decb3?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3',
               fit: BoxFit.cover,
+              placeholder: (context, url) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.green.shade100,
+                child: const Icon(Icons.error),
+              ),
             ),
           ),
           // Gradient Overlay

@@ -1,33 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/styles.dart';
 import '../models/news_card.dart';
-import '../pages/news_detail_page.dart'; // Import NewsDetailPage
-import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
+import '../pages/news_detail_page.dart';
+import '../widgets/bottom_navbar.dart';
+import '../providers/post_provider.dart';
+import '../utils/constants.dart';
+import '../providers/base_state.dart';
+import '../models/post.dart';
+import 'package:intl/intl.dart';
 
-class NewsPage extends StatelessWidget {
-  const NewsPage({Key? key}) : super(key: key);
+class NewsPage extends StatefulWidget {
+  final String? searchKeyword;
+  
+  const NewsPage({
+    Key? key,
+    this.searchKeyword,
+  }) : super(key: key);
 
-  final List<Map<String, String>> dummyNewsData = const [
-    {
-      'imageUrl': 'https://cdn.builder.io/api/v1/image/assets/TEMP/dabea6320a348255392974bcbe19455fee235ebf?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3',
-      'title': 'Perayaan HUT RI Ke-78',
-      'description': 'Masyarakat melaksanakan upacara bersama bupati kab. indramayu dilapangan kantor...',
-      'date': '17 Agt 2024',
-    },
-    {
-      'imageUrl': '',
-      'title': 'Judul Berita Kedua yang Lebih Panjang',
-      'description': 'Deskripsi berita kedua yang mungkin lebih panjang dan memerlukan beberapa baris untuk ditampilkan...',
-      'date': '17 Agt 2024',
-    },
-    {
-      'imageUrl': 'https://cdn.builder.io/api/v1/image/assets/TEMP/d078e4043aca5f38f2d6598bb781abd8fde01b8d?placeholderIfAbsent=true&apiKey=7de71166c99f40f8a9d78a85d7e09ce3',
-      'title': 'Judul Berita Ketiga',
-      'description': 'Deskripsi singkat untuk berita ketiga.',
-      'date': '17 Agt 2024',
-    },
-    // Tambahkan data berita lainnya di sini
-  ];
+  @override
+  State<NewsPage> createState() => _NewsPageState();
+}
+
+class _NewsPageState extends State<NewsPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (widget.searchKeyword != null && widget.searchKeyword!.isNotEmpty) {
+        context.read<PostProvider>().searchPosts(widget.searchKeyword!);
+      } else {
+        context.read<PostProvider>().loadPosts();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,36 +67,68 @@ class NewsPage extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.only(top: 16, bottom: AppStyles.screenPadding, left: 16, right: 16),
-        itemCount: dummyNewsData.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 12),
-        itemBuilder: (context, index) {
-          final newsItem = dummyNewsData[index];
-          return GestureDetector( // Bungkus NewsCard dengan GestureDetector
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewsDetailPage(
-                    imageUrl: newsItem['imageUrl'] ?? '',
-                    title: newsItem['title'] ?? '',
-                    description: newsItem['description'] ?? '',
-                    date: newsItem['date'] ?? '',
-                  ),
+      body: Consumer<PostProvider>(
+        builder: (context, provider, child) {
+          if (provider.state.status == Status.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (provider.state.status == Status.error) {
+            return Center(
+              child: Text(
+                provider.state.errorMessage ?? AppConstants.defaultErrorMessage,
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
+          final List<Post> posts = (provider.state.data as List<Post>?) ?? [];
+
+          if (posts.isEmpty) {
+            return const Center(
+              child: Text(
+                'Tidak ada berita saat ini',
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.only(
+              top: 16,
+              bottom: AppStyles.screenPadding,
+            ),
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              final post = posts[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsDetailPage(
+                        imageUrl: post.image ?? '',
+                        title: post.title ?? '',
+                        description: post.content ?? '',
+                        date: post.createdAt != null 
+                          ? DateFormat('dd MMM yyyy').format(post.createdAt!)
+                          : '',
+                      ),
+                    ),
+                  );
+                },
+                child: NewsCard(
+                  imageUrl: post.image ?? '',
+                  title: post.title ?? '',
+                  description: post.content ?? '',
+                  date: post.createdAt,
                 ),
               );
             },
-            child: NewsCard(
-              imageUrl: newsItem['imageUrl'] ?? '',
-              title: newsItem['title'] ?? '',
-              description: newsItem['description'] ?? '',
-              date: newsItem['date'] ?? '',
-            ),
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

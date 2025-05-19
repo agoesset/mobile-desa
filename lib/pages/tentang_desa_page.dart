@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/colors.dart';
 import '../theme/text_styles.dart';
-import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
+import '../widgets/bottom_navbar.dart';
+import '../providers/pages_provider.dart';
+import '../widgets/loading_widget.dart';
+import '../widgets/error_widget.dart';
+import '../providers/base_state.dart';
+import 'package:flutter_html/flutter_html.dart';
 
-class TentangDesaScreen extends StatelessWidget {
+class TentangDesaScreen extends StatefulWidget {
   const TentangDesaScreen({Key? key}) : super(key: key);
+
+  @override
+  State<TentangDesaScreen> createState() => _TentangDesaScreenState();
+}
+
+class _TentangDesaScreenState extends State<TentangDesaScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<PagesProvider>().loadPageDetail('tentang-desa');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +32,7 @@ class TentangDesaScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0F2A1D), // Warna hijau tua untuk header
+        backgroundColor: const Color(0xFF0F2A1D),
         title: const Text(
           'Tentang Desa',
           style: TextStyle(
@@ -27,9 +46,9 @@ class TentangDesaScreen extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: const Icon(Icons.arrow_back, color: Colors.white),
         ),
-        shape: const RoundedRectangleBorder( // Tambahkan properti shape
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20), // Atur radius untuk bagian bawah
+            bottom: Radius.circular(20),
           ),
         ),
       ),
@@ -39,37 +58,81 @@ class TentangDesaScreen extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  width: screenWidth > 600 ? 568 : screenWidth * 0.95, // Lebar responsif
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE8EFDC), // Warna krem muda
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting '
-                    'industry. Lorem Ipsum has been the industry\'s standard dummy text ever '
-                    'since the 1500s, when an unknown printer took a galley of type and '
-                    'scrambled it to make a type specimen book. It has survived not only '
-                    'five centuries, but also the leap into electronic typesetting, '
-                    'remaining essentially unchanged. It was popularised in the 1960s with '
-                    'the release of Letraset sheets containing Lorem Ipsum passages, and '
-                    'more recently with desktop publishing software like Aldus PageMaker '
-                    'including versions of Lorem Ipsum.\n\n'
-                    'It has survived not only five centuries, but also the leap into electronic '
-                    'typesetting, remaining essentially unchanged. It was popularised in the '
-                    '1960s with the release of Letraset sheets containing Lorem Ipsum passages, '
-                    'and more recently with desktop publishing software like Aldus PageMaker '
-                    'including versions of Lorem Ipsum.',
-                    style: AppTextStyles.contentText,
-                  ),
+                child: Consumer<PagesProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.pageDetailState.status == Status.loading) {
+                      return const Center(child: LoadingWidget());
+                    }
+
+                    if (provider.pageDetailState.status == Status.error) {
+                      return CustomErrorWidget(
+                        message: provider.pageDetailState.errorMessage ?? 'Terjadi kesalahan',
+                        onRetry: () => provider.loadPageDetail('tentang-desa'),
+                      );
+                    }
+
+                    final page = provider.pageDetailState.data;
+                    if (page == null) {
+                      return Center(
+                        child: Text(
+                          'Konten belum tersedia',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                            fontFamily: 'Alatsi',
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Container(
+                      width: screenWidth > 600 ? 568 : screenWidth * 0.95,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8EFDC),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Html(
+                        data: page.content ?? 'Konten tidak tersedia',
+                        style: {
+                          "body": Style(
+                            fontSize: FontSize(14),
+                                fontFamily: 'Alatsi',
+                              ),
+                          "h1": Style(
+                            fontSize: FontSize(24),
+                            fontWeight: FontWeight.bold,
+                            margin: Margins(bottom: Margin(16)),
+                          ),
+                          "h2": Style(
+                            fontSize: FontSize(20),
+                            fontWeight: FontWeight.bold,
+                            margin: Margins(bottom: Margin(12), top: Margin(8)),
+                          ),
+                          "p": Style(
+                            fontSize: FontSize(14),
+                            lineHeight: LineHeight(1.5),
+                            margin: Margins(bottom: Margin(8)),
+                          ),
+                          "ul": Style(
+                            margin: Margins(left: Margin(16), bottom: Margin(8)),
+                          ),
+                          "li": Style(
+                            margin: Margins(bottom: Margin(4)),
+                          ),
+                          "b": Style(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }

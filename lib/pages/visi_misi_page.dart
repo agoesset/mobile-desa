@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/colors.dart';
 import '../theme/text_styles.dart';
-import '../widgets/bottom_navbar.dart'; // Import BottomNavBar
+import '../widgets/bottom_navbar.dart';
+import '../providers/pages_provider.dart';
+import '../widgets/loading_widget.dart';
+import '../widgets/error_widget.dart';
+import '../providers/base_state.dart';
+import 'package:flutter_html/flutter_html.dart';
 
-class VisiMisiDesaScreen extends StatelessWidget {
+class VisiMisiDesaScreen extends StatefulWidget {
   const VisiMisiDesaScreen({Key? key}) : super(key: key);
+
+  @override
+  State<VisiMisiDesaScreen> createState() => _VisiMisiDesaScreenState();
+}
+
+class _VisiMisiDesaScreenState extends State<VisiMisiDesaScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<PagesProvider>().loadPageDetail('visi-misi-desa');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +32,7 @@ class VisiMisiDesaScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0F2A1D), // Warna hijau tua untuk header
+        backgroundColor: const Color(0xFF0F2A1D),
         title: const Text(
           'Visi & Misi Desa',
           style: TextStyle(
@@ -27,9 +46,9 @@ class VisiMisiDesaScreen extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: const Icon(Icons.arrow_back, color: Colors.white),
         ),
-        shape: const RoundedRectangleBorder( // Tambahkan properti shape
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20), // Atur radius untuk bagian bawah
+            bottom: Radius.circular(20),
           ),
         ),
       ),
@@ -39,54 +58,81 @@ class VisiMisiDesaScreen extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  width: screenWidth > 600 ? 568 : screenWidth * 0.95, // Lebar responsif
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE8EFDC), // Warna krem muda
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column( // Gunakan Column untuk menampung Visi dan Misi secara terpisah
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Visi Desa',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                child: Consumer<PagesProvider>(
+                  builder: (context, provider, child) {
+                    if (provider.pageDetailState.status == Status.loading) {
+                      return const Center(child: LoadingWidget());
+                    }
+
+                    if (provider.pageDetailState.status == Status.error) {
+                      return CustomErrorWidget(
+                        message: provider.pageDetailState.errorMessage ?? 'Terjadi kesalahan',
+                        onRetry: () => provider.loadPageDetail('visi-misi-desa'),
+                      );
+                    }
+
+                    final page = provider.pageDetailState.data;
+                    if (page == null) {
+                      return Center(
+                        child: Text(
+                          'Konten belum tersedia',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                            fontFamily: 'Alatsi',
+                          ),
                         ),
+                      );
+                    }
+
+                    return Container(
+                      width: screenWidth > 600 ? 568 : screenWidth * 0.95,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8EFDC),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Terwujudnya desa [Nama Desa] yang maju, mandiri, sejahtera, dan berbudaya.',
-                        style: AppTextStyles.contentText,
+                      child: Html(
+                        data: page.content ?? 'Konten tidak tersedia',
+                        style: {
+                          "body": Style(
+                            fontSize: FontSize(14),
+                                fontFamily: 'Alatsi',
+                              ),
+                          "h1": Style(
+                            fontSize: FontSize(24),
+                            fontWeight: FontWeight.bold,
+                            margin: Margins(bottom: Margin(16)),
+                          ),
+                          "h2": Style(
+                            fontSize: FontSize(20),
+                            fontWeight: FontWeight.bold,
+                            margin: Margins(bottom: Margin(12), top: Margin(8)),
+                          ),
+                          "p": Style(
+                            fontSize: FontSize(14),
+                            lineHeight: LineHeight(1.5),
+                            margin: Margins(bottom: Margin(8)),
+                          ),
+                          "ul": Style(
+                            margin: Margins(left: Margin(16), bottom: Margin(8)),
+                          ),
+                          "li": Style(
+                            margin: Margins(bottom: Margin(4)),
+                          ),
+                          "b": Style(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        },
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Misi Desa',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '- Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan.\n'
-                        '- Mengembangkan potensi ekonomi desa berbasis kearifan lokal.\n'
-                        '- Meningkatkan infrastruktur desa yang memadai dan berkelanjutan.\n'
-                        '- Memperkuat tata kelola pemerintahan desa yang transparan dan akuntabel.\n'
-                        '- Melestarikan nilai-nilai budaya dan kearifan lokal.',
-                        style: AppTextStyles.contentText,
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(), // Tambahkan BottomNavBar di sini
     );
   }
 }

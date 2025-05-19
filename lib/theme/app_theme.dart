@@ -11,11 +11,21 @@ class AppTheme {
     Color color = Colors.black,
     FontWeight fontWeight = FontWeight.normal,
   }) {
-    return GoogleFonts.alatsi(
-      fontSize: fontSize,
-      color: color,
-      fontWeight: fontWeight,
-    );
+    try {
+      return GoogleFonts.alatsi(
+        fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight,
+      );
+    } catch (e) {
+      // Fallback to system font if Google Fonts fails
+      return TextStyle(
+        fontFamily: 'Alatsi',  // Will use local Alatsi font if available
+        fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight,
+      );
+    }
   }
 
   static BoxShadow defaultShadow = BoxShadow(
@@ -23,4 +33,21 @@ class AppTheme {
     offset: const Offset(0, 4),
     blurRadius: 4,
   );
+
+  // Theme data for the app
+  static ThemeData get lightTheme {
+    return ThemeData(
+      primaryColor: primaryColor,
+      scaffoldBackgroundColor: Colors.white,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+      ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryColor,
+        secondary: secondaryColor,
+      ),
+      useMaterial3: true,
+    );
+  }
 }
