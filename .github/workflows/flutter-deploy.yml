@@ -36,7 +36,7 @@ jobs:
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}  # Gunakan token yang sudah dibuat
+          token: ${{ secrets.ACCESS_TOKEN }}  # Gunakan token yang sudah dibuat exp sampai 16 Agustus 2025
           folder: build/web
           branch: gh-pages
           clean: true
