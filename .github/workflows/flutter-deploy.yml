@@ -3,9 +3,10 @@ name: Deploy Flutter Web
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:  # Memungkinkan Anda menjalankan workflow secara manual dari UI GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -18,7 +19,7 @@ jobs:
       - name: Setup Flutter 🔧
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.3'  # Sesuaikan dengan versi Flutter Anda
+          flutter-version: '3.16.0'
           channel: 'stable'
           
       - name: Enable Flutter Web 🌐
@@ -28,15 +29,19 @@ jobs:
         run: flutter pub get
         
       - name: Build Web 🏗️
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+        run: flutter build web --release --base-href "/"
         
       - name: Create .nojekyll File 📄
         run: touch build/web/.nojekyll
         
+      - name: Create CNAME File 📝
+        run: echo "desa-flutter.aguss.id" > build/web/CNAME
+        
       - name: Deploy to GitHub Pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}  # Gunakan token yang sudah dibuat exp sampai 16 Agustus 2025
           folder: build/web
           branch: gh-pages
           clean: true
+          clean-exclude: |
+            CNAME
